@@ -1,11 +1,15 @@
+import configparser
 import logging
 
 
 class Logger:
-    def __init__(self):
+    def __init__(self, level=logging.INFO):
+        logging.basicConfig(
+            level=level,
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            handlers=[logging.StreamHandler()],
+        )
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.INFO)
-        self.logger.addHandler(logging.StreamHandler())
 
     def info(self, message, *args, **kwargs):
         self.logger.info(message, *args, **kwargs)
@@ -17,4 +21,6 @@ class Logger:
         self.logger.debug(message, *args, **kwargs)
 
 
-logger = Logger()
+config = configparser.ConfigParser()
+config.read("config.ini")
+logger = Logger(config.get("logger", "level", fallback=logging.INFO))
