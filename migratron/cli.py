@@ -2,13 +2,15 @@ import argparse
 
 from migratron.commands import (
     init_command,
-    generate_command
+    generate_command,
+    upgrade_command,
+    downgrade_command,
 )
-from migratron.commands import upgrade_command
 
 INIT_COMMAND = "init"
 GENERATE_COMMAND = "generate"
 UPGRADE_COMMAND = "upgrade"
+DOWNGRADE_COMMAND = "downgrade"
 
 
 def main():
@@ -26,6 +28,9 @@ def main():
     # Upgrade command
     subparsers.add_parser("upgrade", help="execute all pending migrations")
 
+    # Downgrade command
+    subparsers.add_parser("downgrade", help="execute all pending migrations")
+
     args = parser.parse_args()
 
     if args.command == INIT_COMMAND:
@@ -34,6 +39,8 @@ def main():
         generate_command.generate_command(args.name)
     elif args.command == UPGRADE_COMMAND:
         upgrade_command.upgrade_command()
+    elif args.command == DOWNGRADE_COMMAND:
+        downgrade_command.downgrade_command()
     else:
         parser.print_help()
 
