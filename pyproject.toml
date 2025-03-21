@@ -1,6 +1,6 @@
 [project]
 name = "migratron"
-version = "0.1.0"
+version = "0.0.1-rc9"
 description = ""
 authors = [
     {name = "fredimatteo",email = "matteofredi.developer@gmail.com"}
@@ -15,3 +15,13 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+build = "^1.2.2.post1"
+
+[tool.poetry]
+packages = [{include = "migratron", from = "."}, {include = "migratron"}]
+exclude = ["tests", "docs", ".github", ".gitignore", "pyproject.toml", "README.md"]
+
+[tool.poetry.scripts]
+migratron = "migratron.cli:main"
