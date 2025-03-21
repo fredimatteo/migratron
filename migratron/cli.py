@@ -1,5 +1,6 @@
 import argparse
 
+from migratron import current_version
 from migratron.commands import (
     init_command,
     generate_command,
@@ -30,6 +31,9 @@ def main():
 
     # Downgrade command
     subparsers.add_parser("downgrade", help="execute all pending migrations")
+
+    # Version command
+    parser.add_argument("--version", "-v", action="version", version=current_version)
 
     args = parser.parse_args()
 
