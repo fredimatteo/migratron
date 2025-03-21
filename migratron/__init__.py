@@ -1,4 +1,8 @@
 import sys
+from migratron.core.logger import logger
 
 if not sys.argv[0].endswith("migratron"):
-    raise RuntimeError("This package is intended to be used from CLI only.")
+    logger.error('this package is intended to be used from CLI only.')
+    sys.exit(1)
+
+current_version = "0.1.1"
