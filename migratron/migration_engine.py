@@ -65,11 +65,11 @@ class MigrationEngine:
             return file_names_prefix[-1]
 
     @staticmethod
-    def _get_last_revision_name() -> str:
+    def _get_last_revision_name(is_downgrade: bool = False) -> str:
         folder = Path("./versions")
         file_names: List[str] = [obj.name for obj in folder.iterdir() if obj.is_file()]
         file_names.sort()
-        return file_names[-1]
+        return file_names[-1] if not is_downgrade else file_names[0]
 
     def generate_revision(self, revision_name: str = "") -> None:
         for char in revision_name:
@@ -116,24 +116,25 @@ class MigrationEngine:
         for revision in revisions:
             lines = revision.read_text().splitlines()
             builder = StringIO()
+            is_down = False
             for line in lines:
-                if line.startswith(DOWN_PREFIX):
-                    pass
-                if line.startswith(UP_PREFIX):
-                    break
+                if line.startswith(DOWN_PREFIX) or line.startswith(UP_PREFIX):
+                    is_down = True
+                    continue
 
-                if not line.startswith(COMMENT_PREFIX):
+                if not line.startswith(COMMENT_PREFIX) and is_down:
                     builder.write(line)
                     builder.write("\n")
 
+            is_down = False
             self.db.execute(builder.getvalue())
             self.db.commit()
 
-        last_revision_name = self._get_last_revision_name()
+        last_revision_name = self._get_last_revision_name(is_downgrade=True)
         self.update_migration_table(last_revision_name)
 
     def update_migration_table(self, revision_name: str) -> None:
         logger.debug('updating migration table with new revision: %s', revision_name)
-        self.db.execute(f"""INSERT INTO migrations (name) VALUES ('{revision_name}')""")
+        self.db.execute(f"""UPDATE migrations SET name = '{revision_name}'""")
         self.db.commit()
         logger.debug('migration table updated successfully')
