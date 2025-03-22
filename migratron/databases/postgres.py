@@ -25,6 +25,7 @@ class Postgres(DatabaseConnector):
     def __init__(self, config: Config):
         self.host = config.host
         self.user = config.user
+        self.port = config.port
         self.password = config.password
         self.database = config.database
         self.conn: psycopg.Connection | None = None
@@ -72,6 +73,7 @@ class Postgres(DatabaseConnector):
         try:
             cursor = self.conn.cursor()
             cursor.execute(query)
+            return cursor
         except psycopg.Error as e:
             logger.error("error while executing query: %s", e)
             self.rollback()
