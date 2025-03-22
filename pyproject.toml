@@ -1,6 +1,6 @@
 [project]
 name = "migratron"
-version = "0.0.1-rc10"
+version = "0.1.0"
 description = ""
 authors = [
     { name = "fredimatteo", email = "matteofredi.developer@gmail.com" }
