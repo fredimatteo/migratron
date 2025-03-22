@@ -17,7 +17,7 @@ LIST_REVISIONS_COMMAND = "list"
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="migratron", description="A tool for database migrations :)")
+    parser = argparse.ArgumentParser(prog="migratron", description="A tool for database migrations")
     subparsers = parser.add_subparsers(dest="command")
 
     # Init command
