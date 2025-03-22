@@ -6,12 +6,14 @@ from migratron.commands import (
     generate_command,
     upgrade_command,
     downgrade_command,
+    list_commands
 )
 
 INIT_COMMAND = "init"
 GENERATE_COMMAND = "generate"
 UPGRADE_COMMAND = "upgrade"
 DOWNGRADE_COMMAND = "downgrade"
+LIST_REVISIONS_COMMAND = "list"
 
 
 def main():
@@ -32,6 +34,9 @@ def main():
     # Downgrade command
     subparsers.add_parser("downgrade", help="execute all pending migrations")
 
+    # List command
+    subparsers.add_parser("list", help="list all migrations")
+
     # Version command
     parser.add_argument("--version", "-v", action="version", version=current_version)
 
@@ -45,8 +50,11 @@ def main():
         upgrade_command.upgrade_command()
     elif args.command == DOWNGRADE_COMMAND:
         downgrade_command.downgrade_command()
+    elif args.command == LIST_REVISIONS_COMMAND:
+        list_commands.list_command()
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()

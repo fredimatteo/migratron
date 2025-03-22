@@ -89,6 +89,9 @@ class MigrationEngine:
         files_sorted: List[Path] = sorted(files, key=lambda x: x.name.split("_")[0])
         return files_sorted
 
+    def list_revisions(self) -> List[Path]:
+        return self._get_all_revisions()
+
     def upgrade(self) -> None:
         revisions = self._get_all_revisions()
         for revision in revisions:
