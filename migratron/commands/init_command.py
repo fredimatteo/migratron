@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from migratron.core.logger import logger
 
 CONFIG_EXAMPLE: str = """
 [database]
@@ -12,10 +13,6 @@ type = postgres
 
 [logger]
 level = DEBUG
-
-[project.setup]
-folder_absolute_path = /path/to/migratron
-config_ini_absolute_path = 
 """
 
 def init_command(directory_name: str) -> None:
@@ -32,5 +29,5 @@ def init_command(directory_name: str) -> None:
         config_example_path.write_text(CONFIG_EXAMPLE, encoding="utf-8")
         config_path.touch(exist_ok=True)
     except Exception as e:
-        print(f"error during project initialization {e}", file=sys.stderr)
+        logger.error('error during project initialization: %s', str(e))
         sys.exit(1)

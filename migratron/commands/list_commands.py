@@ -3,9 +3,11 @@ from migratron.databases.services import get_db_connector
 from migratron.migration_engine import MigrationEngine
 
 
-def generate_command(migration_name: str):
+def list_command():
     db = get_db_connector(load_db_config())
     mg = MigrationEngine(db)
 
     mg.init()
-    mg.generate_revision(migration_name)
+    revisions = mg.list_revisions()
+    for r in revisions:
+        print('- ' + r.name)
