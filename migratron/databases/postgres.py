@@ -1,4 +1,5 @@
 import sys
+from dataclasses import dataclass
 
 import psycopg
 
@@ -6,18 +7,27 @@ from migratron.core.logger import logger
 from migratron.databases.db_connector import DatabaseConnector
 
 
-class Postgres(DatabaseConnector):
-    def __init__(self, host: str, port: str | int, user: str, password: str , database: str):
-        self.host = host
-        self.user = user
-        self.password = password
-        self.database = database
-        self.conn: psycopg.Connection | None = None
+@dataclass
+class Config:
+    host: str
+    port: str | int
+    user: str
+    password: str
+    database: str
 
-        if isinstance(port, str):
-            self.port = int(port)
-        else:
-            self.port = port
+    def __post_init__(self):
+        if isinstance(self.port, str):
+            self.port = int(self.port)
+
+
+
+class Postgres(DatabaseConnector):
+    def __init__(self, config: Config):
+        self.host = config.host
+        self.user = config.user
+        self.password = config.password
+        self.database = config.database
+        self.conn: psycopg.Connection | None = None
 
     def connection(self):
         self.conn = self._create_connection()
