@@ -148,7 +148,7 @@ class MigrationEngine:
             builder = StringIO()
             is_down = False
             for line in lines:
-                if line.startswith(DOWN_PREFIX) or line.startswith(UP_PREFIX):
+                if line.startswith(DOWN_PREFIX):
                     is_down = True
                     continue
 
