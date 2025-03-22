@@ -51,10 +51,6 @@ type = postgres
 
 [logger]
 level = DEBUG
-
-[project.setup]
-folder_absolute_path = /path/to/migratron
-config_ini_absolute_path = 
 ```
 
 ### 4. Create a new migration
@@ -90,13 +86,13 @@ DROP TABLE users;
 
 ## ⚙️ Available commands
 
-| Comando                   | Descrizione                   |
-|---------------------------|-------------------------------|
-| `migratron init`          | Init migratron environment    |
-| `migratron create <nome>` | Generate a new sql migration  |
-| `migratron apply`         | Apply all the migration       |
-| `migratron rollback`      | Rollback last revision        |
-| `migratron list `         | Show current migration status |
+| Comando                     | Descrizione                   |
+|-----------------------------|-------------------------------|
+| `migratron init`            | Init migratron environment    |
+| `migratron generate <name>` | Generate a new sql migration  |
+| `migratron upgrade`         | Apply all the migration       |
+| `migratron downgrade`       | Rollback all revisions        |
+| `migratron list `           | Show current migration status |
 
 ---
 
