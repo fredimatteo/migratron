@@ -12,7 +12,7 @@ class Postgres(DatabaseConnector):
         self.user = user
         self.password = password
         self.database = database
-        self.conn = None
+        self.conn: psycopg.Connection | None = None
 
         if isinstance(port, str):
             self.port = int(port)
@@ -22,7 +22,7 @@ class Postgres(DatabaseConnector):
     def connection(self):
         self.conn = self._create_connection()
 
-    def __get_private_passwrd(self) -> str:
+    def __get_private_password(self) -> str:
         private_pwd: str = '*' * len(self.password)
         return private_pwd or '*'
 
@@ -32,7 +32,7 @@ class Postgres(DatabaseConnector):
                          self.host,
                          self.port,
                          self.user,
-                         self.__get_private_passwrd(),
+                         self.__get_private_password(),
                          self.database)
             connection_instance = psycopg.connect(
                 host=self.host,
