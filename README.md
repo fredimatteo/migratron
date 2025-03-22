@@ -1,6 +1,6 @@
-# 🛠️ Migratron
+# 🛠️ Migropy
 
-**Migratron** is a lightweight and extensible Python library for managing **database migrations**.  
+**Migropy** is a lightweight and extensible Python library for managing **database migrations**.  
 Designed for simplicity and flexibility, it helps teams apply, track, and version-control schema changes across multiple
 environments.
 
@@ -19,7 +19,7 @@ environments.
 ## 📦 Installation
 
 ```bash
-pip install migratron
+pip install migropy
 ```
 
 ---
@@ -29,7 +29,7 @@ pip install migratron
 ### 1. Initialize a new migration project
 
 ```bash
-migratron init
+migropy init
 ```
 
 ### 2. Go to the migrations directory
@@ -56,13 +56,13 @@ level = DEBUG
 ### 4. Create a new migration
 
 ```bash
-migratron create my_migration
+migropy generate 'migration name'
 ```
 
 ### 5. Apply the migrations
 
 ```bash
-migratron apply
+migropy apply
 ```
 
 ---
@@ -86,13 +86,13 @@ DROP TABLE users;
 
 ## ⚙️ Available commands
 
-| Comando                     | Descrizione                   |
-|-----------------------------|-------------------------------|
-| `migratron init`            | Init migratron environment    |
-| `migratron generate <name>` | Generate a new sql migration  |
-| `migratron upgrade`         | Apply all the migration       |
-| `migratron downgrade`       | Rollback all revisions        |
-| `migratron list `           | Show current migration status |
+| Comando                   | Descrizione                   |
+|---------------------------|-------------------------------|
+| `migropy init`            | Init migratron environment    |
+| `migropy generate <name>` | Generate a new sql migration  |
+| `migropy upgrade`         | Apply all the migration       |
+| `migropy downgrade`       | Rollback all revisions        |
+| `migropy list `           | Show current migration status |
 
 ---
 

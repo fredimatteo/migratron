@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
-from migratron.core.logger import logger
+
+from migropy.core.logger import logger
 
 CONFIG_EXAMPLE: str = """
 [database]
@@ -15,9 +16,10 @@ type = postgres
 level = DEBUG
 """
 
-def init_command(directory_name: str) -> None:
+
+def init_command() -> None:
     try:
-        project_path = Path(directory_name)
+        project_path = Path('migrations')
         versions_path = project_path / "versions"
         readme_path = project_path / "README.md"
         config_example_path = project_path / "config.ini.example"

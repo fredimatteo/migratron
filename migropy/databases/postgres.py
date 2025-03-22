@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 import psycopg
 
-from migratron.core.logger import logger
-from migratron.databases.db_connector import DatabaseConnector
+from migropy.core.logger import logger
+from migropy.databases.db_connector import DatabaseConnector
 
 
 @dataclass

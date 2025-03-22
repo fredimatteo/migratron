@@ -1,5 +1,5 @@
-from migratron.databases.db_connector import DatabaseConnector
-from migratron.databases.postgres import Postgres, Config
+from migropy.databases.db_connector import DatabaseConnector
+from migropy.databases.postgres import Postgres, Config
 
 
 def get_db_connector(config: dict) -> DatabaseConnector:

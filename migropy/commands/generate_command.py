@@ -1,6 +1,6 @@
-from migratron.configuration_parser import load_db_config
-from migratron.databases.services import get_db_connector
-from migratron.migration_engine import MigrationEngine
+from migropy.configuration_parser import load_db_config
+from migropy.databases.services import get_db_connector
+from migropy.migration_engine import MigrationEngine
 
 
 def generate_command(migration_name: str):

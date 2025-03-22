@@ -1,7 +1,7 @@
 import argparse
 
-from migratron import current_version
-from migratron.commands import (
+from migropy import current_version
+from migropy.commands import (
     init_command,
     generate_command,
     upgrade_command,
@@ -17,12 +17,11 @@ LIST_REVISIONS_COMMAND = "list"
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="migratron", description="A tool for database migrations")
+    parser = argparse.ArgumentParser(prog="migropy", description="A tool for database migrations")
     subparsers = parser.add_subparsers(dest="command")
 
     # Init command
-    init_parser = subparsers.add_parser("init", help="project initialization")
-    init_parser.add_argument("directory", type=str, help="tool main folder name")
+    subparsers.add_parser("init", help="project initialization")
 
     # Generate command
     generate_parser = subparsers.add_parser("generate", help="generate a new migration")
@@ -43,7 +42,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == INIT_COMMAND:
-        init_command.init_command(args.directory)
+        init_command.init_command()
     elif args.command == GENERATE_COMMAND:
         generate_command.generate_command(args.name)
     elif args.command == UPGRADE_COMMAND:

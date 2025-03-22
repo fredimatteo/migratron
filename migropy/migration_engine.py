@@ -4,8 +4,8 @@ from io import StringIO
 from pathlib import Path
 from typing import List
 
-from migratron.core.logger import logger
-from migratron.databases.db_connector import DatabaseConnector
+from migropy.core.logger import logger
+from migropy.databases.db_connector import DatabaseConnector
 
 FIRST_REVISION_ID = '0000'
 UP_PREFIX = "-- Up"

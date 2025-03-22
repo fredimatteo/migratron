@@ -1,7 +1,7 @@
 import configparser
 import sys
 
-from migratron.core.logger import logger
+from migropy.core.logger import logger
 
 
 def load_db_config(config_file_path: str = "config.ini"):
