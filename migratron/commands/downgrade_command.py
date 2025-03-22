@@ -8,4 +8,3 @@ def downgrade_command():
 
     mg = MigrationEngine(db)
     mg.downgrade()
-

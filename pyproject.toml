@@ -6,7 +6,7 @@ authors = [
     { name = "fredimatteo", email = "matteofredi.developer@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.8.0"
+requires-python = ">=3.9.0"
 dependencies = [
     "psycopg (>=3.2.6,<4.0.0)",
 ]
@@ -21,6 +21,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.group.dev.dependencies]
 build = "^1.2.2.post1"
+pylint = "^3.3.6"
 
 [tool.poetry]
 packages = [{ include = "migratron", from = "." }, { include = "migratron" }]

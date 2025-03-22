@@ -9,4 +9,3 @@ def upgrade_command():
     mg = MigrationEngine(db)
 
     mg.upgrade()
-
