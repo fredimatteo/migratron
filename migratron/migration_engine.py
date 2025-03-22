@@ -60,7 +60,7 @@ class MigrationEngine:
         revision_file_name = f"{revision_id}_{revision_name}.sql"
         revision_file_path = Path(f"./versions/{revision_file_name}")
 
-        with open(revision_file_path, "w") as revision_file:
+        with open(revision_file_path, "w", encoding='utf-8') as revision_file:
             revision_file.writelines(REVISION_TEMPLATE)
 
     @staticmethod
