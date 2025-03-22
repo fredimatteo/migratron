@@ -12,5 +12,5 @@ def get_db_connector(config: dict) -> DatabaseConnector:
             password=config["password"],
             database=config["dbname"]
         )
-    else:
-        raise ValueError(f"unsupported database type: {db_type}")
+
+    raise ValueError(f"unsupported database type: {db_type}")
