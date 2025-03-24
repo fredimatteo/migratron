@@ -10,9 +10,7 @@ on:
   pull_request:
     branches:
       - main
-      - develop
-      - feature/*
-
+        
 jobs:
   pylint:
     runs-on: ubuntu-latest
