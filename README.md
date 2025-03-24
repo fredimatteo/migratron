@@ -1,5 +1,5 @@
 ![Python versions](https://img.shields.io/pypi/pyversions/migropy?style=flat-square&logo=python&logoColor=white&color)
-![Build](https://img.shields.io/github/actions/workflow/status/tuo-utente/migropy/ci.yml?style=flat-square&logo=github&logoColor=white&color)
+![Test](https://img.shields.io/github/actions/workflow/status/fredimatteo/migratron/test.yml?style=flat-square&logo=github&logoColor=white&color&label=Test)
 
 # 🛠️ Migropy
 
@@ -96,6 +96,16 @@ DROP TABLE users;
 | `migropy upgrade`         | Apply all the migration       |
 | `migropy downgrade`       | Rollback all revisions        |
 | `migropy list `           | Show current migration status |
+
+---
+
+## 🧪 Running Unit Tests
+
+To run the unit tests using poetry, you can use the following command:
+
+```bash
+poetry run pytest --rootdir=tests
+```
 
 ---
 
