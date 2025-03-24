@@ -3,7 +3,8 @@ name: Test CI
 on:
   workflow_run:
     workflows: [ Pylint ]
-    types: [ completed ]
+    types:
+      - completed
 
 jobs:
   test:
