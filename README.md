@@ -98,7 +98,7 @@ DROP TABLE users;
 
 ## 📝 Changelog
 
-See the full [CHANGELOG.md](https://github.com/tuo-utente/migratron/blob/main/CHANGELOG.md)
+See the full [CHANGELOG.md](https://github.com/fredimatteo/migratron/blob/main/CHANGELOG.md)
 
 ### Latest Changes
 
