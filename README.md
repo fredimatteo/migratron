@@ -9,7 +9,7 @@ environments.
 ## 🚀 Features
 
 - ✅ Versioned migrations with up/down support
-- ✅ Compatible with PostgreSQL
+- ✅ Compatible with PostgreSQL & MySQL
 - ✅ CLI for common migration operations
 - ✅ Safe and idempotent execution
 - ✅ Customizable migration directory structure
@@ -47,7 +47,7 @@ port = 5432
 user = postgres
 password = postgres
 dbname = my_database
-type = postgres
+type = postgres # or mysql
 
 [logger]
 level = DEBUG
@@ -62,7 +62,7 @@ migropy generate 'migration name'
 ### 5. Apply the migrations
 
 ```bash
-migropy apply
+migropy upgrade
 ```
 
 ---
