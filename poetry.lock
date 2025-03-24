@@ -243,7 +243,6 @@ mccabe = ">=0.6,<0.8"
 platformdirs = ">=2.2"
 tomli = { version = ">=1.1", markers = "python_version < \"3.11\"" }
 tomlkit = ">=0.10.1"
-typing-extensions = { version = ">=3.10", markers = "python_version < \"3.10\"" }
 
 [package.extras]
 spelling = ["pyenchant (>=3.2,<4.0)"]
@@ -331,15 +330,15 @@ markers = { main = "python_version < \"3.13\"", dev = "python_version < \"3.11\"
 
 [[package]]
 name = "tzdata"
-version = "2025.1"
+version = "2025.2"
 description = "Provider of IANA time zone data"
 optional = false
 python-versions = ">=2"
 groups = ["main"]
 markers = "sys_platform == \"win32\""
 files = [
-    {file = "tzdata-2025.1-py2.py3-none-any.whl", hash = "sha256:7e127113816800496f027041c570f50bcd464a020098a3b6b199517772303639"},
-    {file = "tzdata-2025.1.tar.gz", hash = "sha256:24894909e88cdb28bd1636c6887801df64cb485bd593f2fd83ef29075a81d694"},
+    { file = "tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8" },
+    { file = "tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9" },
 ]
 
 [[package]]
@@ -365,5 +364,5 @@ type = ["pytest-mypy"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.9.0"
-content-hash = "8fd47996e8358d4af185f6de724b3d5cbc37ee2d89d24bde2c0ed0b381cf962b"
+python-versions = ">=3.10.0"
+content-hash = "f8131ed21944b16510cb9692c7c95740a7d8126eba05ef1333b20d42773bb118"
