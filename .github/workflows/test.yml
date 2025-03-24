@@ -2,9 +2,8 @@ name: Test CI
 
 on:
   workflow_run:
-    workflows: [ "Pylint" ]
-    types:
-      - completed
+    workflows: [ Pylint ]
+    types: [ completed ]
 
 jobs:
   test:
