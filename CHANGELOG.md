@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
+## [0.2.1] - 2025-03-24
+
+### Changed
+
+- Increase python version to 3.10.
+- Make MigrationEngine.list_revisions static.
+
 ## [0.2.0] - 2025-03-24
 
 ### Added
