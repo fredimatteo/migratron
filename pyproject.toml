@@ -6,7 +6,7 @@ authors = [
     { name = "fredimatteo", email = "matteofredi.developer@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.10.0 <4.0.0"
+requires-python = ">=3.10.0,<4.0.0"
 dependencies = [
     "psycopg (>=3.2.6,<4.0.0)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
@@ -47,7 +47,8 @@ exclude = [
     "*.egg-info",
     ".env",
     ".vscode",
-    ".idea"
+    ".idea",
+    "pypirc",
 ]
 
 [tool.poetry.scripts]

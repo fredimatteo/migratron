@@ -27,10 +27,12 @@ pip install migropy
 
 ---
 
-## 📖 How to use
+## 📖 How to use - CLI
 
 ### 1. Initialize a new migration project
 
+This command will create a new directory called `migrations` with the necessary files to manage your migrations & db
+parameters.
 ```bash
 migropy init
 ```
@@ -58,12 +60,22 @@ level = DEBUG
 
 ### 4. Create a new migration
 
+This command will create a new migration file in the `migrations` directory with the following template:
+
+```sql
+-- Up migration
+
+-- Down migration
+```
+
 ```bash
 migropy generate 'migration name'
 ```
 
 ### 5. Apply the migrations
 
+This command will apply all the migrations in the `migrations` directory. Please note the migrations are applied in
+the prefix order.
 ```bash
 migropy upgrade
 ```
