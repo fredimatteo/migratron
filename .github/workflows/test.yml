@@ -1,7 +1,10 @@
+name: Test CI
+
 on:
-  pull_request:
-    branches:
-      - '*' # Run on all branches
+  workflow_run:
+    workflows: [ "Pylint" ]
+    types:
+      - completed
 
 jobs:
   test:
