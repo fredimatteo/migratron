@@ -28,11 +28,24 @@ exclude = [
     "docs",
     ".github",
     ".gitignore",
-    "pyproject.toml",
-    "README.md",
     "poetry.lock",
+    "README.md",
+    "pyproject.toml",
     ".pylintrc",
     "migropy/databases/type_enum.py",
+    "CHANGELOG.md",
+    "*.pyc",
+    "__pycache__",
+    "*.log",
+    "*.swp",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "*.egg-info",
+    ".env",
+    ".vscode",
+    ".idea"
 ]
 
 [tool.poetry.scripts]
