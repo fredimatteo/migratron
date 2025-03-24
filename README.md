@@ -99,6 +99,16 @@ DROP TABLE users;
 
 ---
 
+## 🧪 Running Unit Tests
+
+To run the unit tests using poetry, you can use the following command:
+
+```bash
+poetry run pytest --rootdir=tests
+```
+
+---
+
 ## 📝 Changelog
 
 See the full [CHANGELOG.md](https://github.com/fredimatteo/migratron/blob/main/CHANGELOG.md)
