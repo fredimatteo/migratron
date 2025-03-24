@@ -96,6 +96,17 @@ DROP TABLE users;
 
 ---
 
+## 📝 Changelog
+
+See the full [CHANGELOG.md](https://github.com/tuo-utente/migratron/blob/main/CHANGELOG.md)
+
+### Latest Changes
+
+- **0.2.0** – MySQL database support
+- **0.1.1** – Initial project setup with PostgreSQL
+
+---
+
 ## 📄 License
 
 MIT License © 2025 — teoxy
