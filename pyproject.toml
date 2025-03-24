@@ -6,7 +6,7 @@ authors = [
     { name = "fredimatteo", email = "matteofredi.developer@gmail.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.10.0"
+requires-python = ">=3.10.0 <4.0.0"
 dependencies = [
     "psycopg (>=3.2.6,<4.0.0)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
@@ -20,6 +20,8 @@ build-backend = "poetry.core.masonry.api"
 build = "^1.2.2.post1"
 pylint = "^3.3.6"
 bump-my-version = "^1.1.1"
+pytest = "^8.3.5"
+testcontainers = "^4.9.2"
 
 [tool.poetry]
 packages = [{ include = "migropy", from = "." }, { include = "migropy" }]
@@ -73,3 +75,6 @@ filename = "migropy/__init__.py"
 
 [[tool.bumpversion.files]]
 filename = "pyproject.toml"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
