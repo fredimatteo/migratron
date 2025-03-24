@@ -10,7 +10,7 @@ port = 5432
 user = postgres
 password = postgres
 dbname = my_database
-type = postgres
+type = postgres # or mysql
 
 [logger]
 level = DEBUG
