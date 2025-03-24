@@ -19,7 +19,7 @@ def test_list_command(capsys, clear_migrations_folder):
     list_commands.list_command()
     captured = capsys.readouterr()
 
-    os.chdir('../..')
+    os.chdir('..')
 
     for i in range(5):
         assert f'{i}_migration.sql' in captured.out
@@ -35,6 +35,6 @@ def test_list_command_no_migrations(capsys, clear_migrations_folder):
     list_commands.list_command()
     captured = capsys.readouterr()
 
-    os.chdir('../..')
+    os.chdir('..')
 
     assert captured.out == ''
