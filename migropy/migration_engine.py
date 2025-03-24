@@ -110,17 +110,14 @@ class MigrationEngine:
         self.__create_revision_file(revision_name)
 
     @staticmethod
-    def __get_all_revisions() -> List[Path]:
+    def list_revisions() -> List[Path]:
         folder = Path("./versions")
         files: List[Path] = [obj for obj in folder.iterdir() if obj.is_file()]
         files_sorted: List[Path] = sorted(files, key=lambda x: x.name.split("_")[0])
         return files_sorted
 
-    def list_revisions(self) -> List[Path]:
-        return self.__get_all_revisions()
-
     def upgrade(self) -> None:
-        revisions = self.__get_all_revisions()
+        revisions = self.list_revisions()
         for revision in revisions:
             lines = revision.read_text().splitlines()
             builder = StringIO()
