@@ -1,6 +1,6 @@
 [project]
 name = "migropy"
-version = "0.1.1"
+version = "0.2.0"
 description = "Lightweight and extensible Python library for managing database migrations"
 authors = [
     { name = "fredimatteo", email = "matteofredi.developer@gmail.com" }
@@ -11,10 +11,6 @@ dependencies = [
     "psycopg (>=3.2.6,<4.0.0)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
 ]
-dev-dependencies = [
-    "bump-my-version (>=1.0.2,<2.0.0)"
-]
-
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -23,6 +19,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 build = "^1.2.2.post1"
 pylint = "^3.3.6"
+bump-my-version = "^1.1.1"
 
 [tool.poetry]
 packages = [{ include = "migropy", from = "." }, { include = "migropy" }]
@@ -42,7 +39,7 @@ exclude = [
 migropy = "migropy.cli:main"
 
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.2.0"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 search = "{current_version}"
