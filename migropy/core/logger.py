@@ -22,5 +22,5 @@ class Logger:
 
 
 config = configparser.ConfigParser()
-config.read("config.ini")
+config.read("migropy.ini")
 logger = Logger(config.get("logger", "level", fallback=logging.INFO))
