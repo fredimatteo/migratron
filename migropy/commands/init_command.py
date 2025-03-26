@@ -4,7 +4,7 @@ from pathlib import Path
 from migropy.core.logger import logger
 
 
-def init_command() -> None:
+def init_command(project_path: str = 'migropy') -> None:
     try:
         import migropy
 
@@ -21,7 +21,7 @@ def init_command() -> None:
         ini_content = ini_files[0].read_text(encoding="utf-8")
         Path("migropy.ini").write_text(ini_content, encoding="utf-8")
 
-        versions_path = Path("migropy") / "versions"
+        versions_path = Path(project_path) / "versions"
         versions_path.mkdir(parents=True, exist_ok=True)
 
         logger.info("Project initialized successfully.")
