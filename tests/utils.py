@@ -1,5 +1,5 @@
+import os.path
 import shutil
-from pathlib import Path
 
 from pytest import fixture
 
@@ -11,4 +11,8 @@ def clear_migrations_folder():
     :return:
     """
     yield
-    shutil.rmtree(Path('migrations'))
+    path = os.path.join(os.getcwd(), 'migropy_test')
+    shutil.rmtree(path, ignore_errors=True)
+
+    ini_path = os.path.join(os.getcwd(), 'migropy.ini')
+    os.remove(ini_path)
