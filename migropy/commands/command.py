@@ -33,20 +33,20 @@ class Commands:
 
         match self.command:
             case CommandsEnum.INIT:
-                self.init()
+                self.__init()
             case CommandsEnum.GENERATE:
-                self.generate(**kwargs)
+                self.__generate(**kwargs)
             case CommandsEnum.UPGRADE:
-                self.upgrade()
+                self.__upgrade()
             case CommandsEnum.DOWNGRADE:
-                self.downgrade()
+                self.__downgrade()
             case CommandsEnum.LIST_REVISIONS:
-                self.list()
+                self.__list()
             case _:
                 logger.error("Unknown command: %s", self.command)
 
     @staticmethod
-    def init(project_path: str = 'migropy'):
+    def __init(project_path: str = 'migropy'):
         try:
             import migropy
 
@@ -73,7 +73,7 @@ class Commands:
             sys.exit(1)
 
     @staticmethod
-    def generate(migration_name: str):
+    def __generate(migration_name: str):
         db = get_db_connector(load_config())
         migration_engine = MigrationEngine(db)
 
@@ -81,21 +81,21 @@ class Commands:
         migration_engine.generate_revision(migration_name)
 
     @staticmethod
-    def upgrade():
+    def __upgrade():
         db = get_db_connector(load_config())
 
         migration_engine = MigrationEngine(db)
         migration_engine.upgrade()
 
     @staticmethod
-    def downgrade():
+    def __downgrade():
         db = get_db_connector(load_config())
 
         migration_engine = MigrationEngine(db)
         migration_engine.downgrade()
 
     @staticmethod
-    def list():
+    def __list():
         revisions = MigrationEngine().list_revisions()
         for revision in revisions:
             print('- ' + revision.name)
