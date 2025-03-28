@@ -1,19 +1,7 @@
 import argparse
 
 from migropy import current_version
-from migropy.commands import (
-    init_command,
-    generate_command,
-    upgrade_command,
-    downgrade_command,
-    list_commands
-)
-
-INIT_COMMAND = "init"
-GENERATE_COMMAND = "generate"
-UPGRADE_COMMAND = "upgrade"
-DOWNGRADE_COMMAND = "downgrade"
-LIST_REVISIONS_COMMAND = "list"
+from migropy.commands.command import Commands
 
 
 def main():
@@ -41,18 +29,14 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == INIT_COMMAND:
-        init_command.init_command()
-    elif args.command == GENERATE_COMMAND:
-        generate_command.generate_command(args.name)
-    elif args.command == UPGRADE_COMMAND:
-        upgrade_command.upgrade_command()
-    elif args.command == DOWNGRADE_COMMAND:
-        downgrade_command.downgrade_command()
-    elif args.command == LIST_REVISIONS_COMMAND:
-        list_commands.list_command()
-    else:
-        parser.print_help()
+    migration_name = None
+    try:
+        migration_name = args.name
+    except AttributeError:
+        pass
+
+    cmd = Commands(args.command)
+    cmd.dispatch(migration_name=migration_name)
 
 
 if __name__ == "__main__":

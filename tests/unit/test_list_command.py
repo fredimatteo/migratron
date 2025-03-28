@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import patch, call
 
-from migropy.commands import list_commands
+from migropy.commands.command import Commands
 
 
 def test_list_command_prints_revisions():
@@ -13,7 +13,8 @@ def test_list_command_prints_revisions():
 
     with patch("migropy.migration_engine.MigrationEngine.list_revisions", return_value=fake_files):
         with patch("builtins.print") as mock_print:
-            list_commands.list_command()
+            cmd = Commands("list")
+            cmd.dispatch()
 
     mock_print.assert_has_calls([
         call("- 001_initial.py"),
