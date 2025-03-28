@@ -37,7 +37,7 @@ class MigrationEngine:
         Initialize the migration engine with an optional database connector and migration directory.
 
         :param db: Optional DatabaseConnector instance for SQL execution.
-        :param migration_dir: Optional path to the directory containing migration scripts.
+        :param config: Optional configuration object. If not provided, a default configuration is used.
         """
         self.db: Optional[DatabaseConnector] = db
         self.migration_dir: Path = Path(config.script_location).resolve()
