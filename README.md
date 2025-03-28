@@ -9,6 +9,28 @@ environments.
 
 ---
 
+## 📚 Table of Contents
+
+- [🚀 Features](#-features)
+- [📦 Installation](#-installation)
+- [📖 How to use - CLI](#-how-to-use---cli)
+  - [1. Initialize a new migration project](#1-initialize-a-new-migration-project)
+  - [2. Go to the migrations directory](#2-go-to-the-migrations-directory)
+  - [3. Fill the config.ini file](#3-fill-the-configini-file)
+  - [4. Create a new migration](#4-create-a-new-migration)
+  - [5. Apply the migrations](#5-apply-the-migrations)
+- [🐍 How to use - Python](#-how-to-use---python)
+- [📄 Migration example](#-migration-example)
+- [⚙️ Available commands](#-available-commands)
+- [🧪 Running Unit Tests](#-running-unit-tests)
+- [📝 Changelog](#-changelog)
+- [🤝 Contributing](#-contributing)
+- [📫 Support](#-support)
+- [📄 License](#-license)
+
+
+---
+
 ## 🚀 Features
 
 - ✅ Versioned migrations with up/down support
