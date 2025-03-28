@@ -1,28 +1,14 @@
 import sys
-from dataclasses import dataclass
 
 import psycopg
 
 from migropy.core.logger import logger
+from migropy.databases.commons import DbConfig
 from migropy.databases.db_connector import DatabaseConnector
 
 
-@dataclass
-class Config:
-    host: str
-    port: str | int
-    user: str
-    password: str
-    database: str
-
-    def __post_init__(self):
-        if isinstance(self.port, str):
-            self.port = int(self.port)
-
-
-
 class Postgres(DatabaseConnector):
-    def __init__(self, config: Config):
+    def __init__(self, config: DbConfig):
         self.host = config.host
         self.user = config.user
         self.port = config.port
