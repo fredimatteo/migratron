@@ -3,33 +3,29 @@ from pathlib import Path
 
 from migropy.core.logger import logger
 
-CONFIG_EXAMPLE: str = """
-[database]
-host = localhost
-port = 5432
-user = postgres
-password = postgres
-dbname = my_database
-type = postgres # or mysql
 
-[logger]
-level = DEBUG
-"""
-
-
-def init_command() -> None:
+def init_command(project_path: str = 'migropy') -> None:
     try:
-        project_path = Path('migrations')
-        versions_path = project_path / "versions"
-        readme_path = project_path / "README.md"
-        config_example_path = project_path / "config.ini.example"
-        config_path = project_path / "config.ini"
+        import migropy
 
+        package_dir = Path(migropy.__file__).resolve().parent
+        template_dir = package_dir / "templates"
+
+        if not template_dir.exists():
+            raise FileNotFoundError(f"Template directory {template_dir} does not exist")
+
+        ini_files = list(template_dir.glob("*.ini"))
+        if not ini_files:
+            raise FileNotFoundError("No .ini template file found in the templates directory")
+
+        ini_content = ini_files[0].read_text(encoding="utf-8")
+        Path("migropy.ini").write_text(ini_content, encoding="utf-8")
+
+        versions_path = Path(project_path) / "versions"
         versions_path.mkdir(parents=True, exist_ok=True)
 
-        readme_path.touch(exist_ok=True)
-        config_example_path.write_text(CONFIG_EXAMPLE, encoding="utf-8")
-        config_path.touch(exist_ok=True)
+        logger.info("Project initialized successfully.")
+
     except Exception as e:
-        logger.error('error during project initialization: %s', str(e))
+        logger.error("Error during project initialization: %s", str(e))
         sys.exit(1)

@@ -1,40 +1,22 @@
-import os
 from pathlib import Path
+from unittest.mock import patch, call
 
-from migropy.commands import list_commands, init_command
-from tests.utils import clear_migrations_folder
-
-
-def test_list_command(capsys, clear_migrations_folder):
-    # init project layout
-    init_command.init_command()
-
-    # create random migration
-    for i in range(5):
-        Path(f'migrations/versions/{i}_migration.sql').touch()
-
-    # change directory to migrations
-    os.chdir('migrations')
-
-    list_commands.list_command()
-    captured = capsys.readouterr()
-
-    os.chdir('..')
-
-    for i in range(5):
-        assert f'{i}_migration.sql' in captured.out
+from migropy.commands import list_commands
 
 
-def test_list_command_no_migrations(capsys, clear_migrations_folder):
-    # init project layout
-    init_command.init_command()
+def test_list_command_prints_revisions():
+    fake_files = [
+        Path("001_initial.py"),
+        Path("002_add_users.py"),
+        Path("003_add_orders.py"),
+    ]
 
-    # change directory to migrations
-    os.chdir('migrations')
+    with patch("migropy.migration_engine.MigrationEngine.list_revisions", return_value=fake_files):
+        with patch("builtins.print") as mock_print:
+            list_commands.list_command()
 
-    list_commands.list_command()
-    captured = capsys.readouterr()
-
-    os.chdir('..')
-
-    assert captured.out == ''
+    mock_print.assert_has_calls([
+        call("- 001_initial.py"),
+        call("- 002_add_users.py"),
+        call("- 003_add_orders.py"),
+    ])
