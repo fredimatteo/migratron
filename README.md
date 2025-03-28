@@ -205,6 +205,7 @@ See the full [CHANGELOG.md](https://github.com/fredimatteo/migratron/blob/main/C
 
 ### Latest Changes
 
+- **0.2.2** – Commands refactor & usage from python code
 - **0.2.1** – Increase minimum python version to 3.10 & refactor MigrationEngine
 - **0.2.0** – MySQL database support
 - **0.1.1** – Initial project setup with PostgreSQL
