@@ -1,3 +1,4 @@
+import enum
 import sys
 from pathlib import Path
 
@@ -7,11 +8,19 @@ from migropy.databases.services import get_db_connector
 from migropy.migration_engine import MigrationEngine
 
 
+class CommandsEnum(enum.StrEnum):
+    INIT = "init"
+    GENERATE = "generate"
+    UPGRADE = "upgrade"
+    DOWNGRADE = "downgrade"
+    LIST_REVISIONS = "list"
+
+
 class Commands:
     """
     This class is used to define the commands that can be executed in the application from CLI.
     """
-    def __init__(self, command: str):
+    def __init__(self, command: CommandsEnum):
         self.command = command
 
     def dispatch(self, **kwargs):
@@ -22,19 +31,19 @@ class Commands:
             logger.error("No command provided.")
             sys.exit(1)
 
-        if self.command == 'init':
-            self.init()
-        elif self.command == 'generate':
-            self.generate(**kwargs)
-        elif self.command == 'upgrade':
-            self.upgrade()
-        elif self.command == 'downgrade':
-            self.downgrade()
-        elif self.command == 'list':
-            self.list()
-        else:
-            logger.error("Unknown command: %s", self.command)
-            sys.exit(1)
+        match self.command:
+            case CommandsEnum.INIT:
+                self.init()
+            case CommandsEnum.GENERATE:
+                self.generate(**kwargs)
+            case CommandsEnum.UPGRADE:
+                self.upgrade()
+            case CommandsEnum.DOWNGRADE:
+                self.downgrade()
+            case CommandsEnum.LIST_REVISIONS:
+                self.list()
+            case _:
+                logger.error("Unknown command: %s", self.command)
 
     @staticmethod
     def init(project_path: str = 'migropy'):

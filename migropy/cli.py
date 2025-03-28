@@ -3,12 +3,6 @@ import argparse
 from migropy import current_version
 from migropy.commands.command import Commands
 
-INIT_COMMAND = "init"
-GENERATE_COMMAND = "generate"
-UPGRADE_COMMAND = "upgrade"
-DOWNGRADE_COMMAND = "downgrade"
-LIST_REVISIONS_COMMAND = "list"
-
 
 def main():
     parser = argparse.ArgumentParser(prog="migropy", description="A tool for database migrations")
@@ -43,9 +37,6 @@ def main():
 
     cmd = Commands(args.command)
     cmd.dispatch(migration_name=migration_name)
-
-
-    parser.print_help()
 
 
 if __name__ == "__main__":
