@@ -2,40 +2,59 @@ import sys
 import uuid
 from io import StringIO
 from pathlib import Path
-from typing import List
+from typing import List, Optional, Final
 
+from migropy.configuration_parser import load_config
 from migropy.core.logger import logger
 from migropy.databases.db_connector import DatabaseConnector
 
-FIRST_REVISION_ID = '0000'
-UP_PREFIX = "-- Up"
-COMMENT_PREFIX = "--"
-DOWN_PREFIX = "-- Down"
-REVISION_TEMPLATE = [
-    "-- Up migration",
-    "\n",
-    "\n",
-    "-- Down migration"
-]
+
+class MigrationConstants:
+    """Immutable constants used for managing SQL migration scripts."""
+    FIRST_REVISION_ID: Final[str] = '0000'
+    UP_PREFIX: Final[str] = "-- Up"
+    COMMENT_PREFIX: Final[str] = "--"
+    DOWN_PREFIX: Final[str] = "-- Down"
+    REVISION_TEMPLATE: Final[list[str]] = [
+        "-- Up migration",
+        "\n",
+        "\n",
+        "-- Down migration"
+    ]
 
 
 class MigrationEngine:
     """
-    Migration engine class
+    MigrationEngine is responsible for managing SQL database schema migrations.
 
-    This class is responsible for managing the migrations of the database.
+    It handles creation of the migration tracking table, generation of revision files,
+    application of upgrade and downgrade scripts, and maintaining metadata about
+    executed migrations.
     """
 
-    def __init__(self, db: DatabaseConnector):
-        self.db: DatabaseConnector = db
+    def __init__(self, db: Optional[DatabaseConnector] = None, migration_dir: Optional[str] = None):
+        """
+        Initialize the migration engine with an optional database connector and migration directory.
+
+        :param db: Optional DatabaseConnector instance for SQL execution.
+        :param migration_dir: Optional path to the directory containing migration scripts.
+        """
+        self.db: Optional[DatabaseConnector] = db
+        if migration_dir:
+            self.migration_dir: Path = Path(migration_dir).resolve()
+        else:
+            self.migration_dir: Path = Path(load_config().get('script_location')).resolve()
 
     def init(self):
+        """
+        Initialize the migration infrastructure by creating the migration metadata table.
+        """
         self.__create_migration_table()
 
     def __create_migration_table(self) -> None:
         """
-        Create the migration table if it does not exist
-        :return: None
+        Creates the 'migrations' table if it does not exist.
+        This table tracks the latest executed revision.
         """
         if self.db:
             logger.debug('creating migrations table')
@@ -50,53 +69,49 @@ class MigrationEngine:
 
     def __create_revision_file(self, revision_name: str) -> None:
         """
-        Create a new revision file
-        :param revision_name: str
-        :return: None
+        Creates a new revision SQL file with up and down sections.
+
+        :param revision_name: Name of the revision.
         """
         revision_id = self.__get_last_revision_id()
         revision_id = str(int(revision_id) + 1).zfill(4)
 
         revision_file_name = f"{revision_id}_{revision_name}.sql"
-        revision_file_path = Path(f"./versions/{revision_file_name}")
+        revision_file_path = self.migration_dir / 'versions' / revision_file_name
 
+        self.migration_dir.mkdir(parents=True, exist_ok=True)
         with open(revision_file_path, "w", encoding='utf-8') as revision_file:
-            revision_file.writelines(REVISION_TEMPLATE)
+            revision_file.writelines(MigrationConstants.REVISION_TEMPLATE)
 
-    @staticmethod
-    def __get_last_revision_id() -> str:
+    def __get_last_revision_id(self) -> str:
         """
-        Get the last revision id
-        :return: str
-        """
-        folder = Path("./versions")
-        file_names: List[str] = [obj.name for obj in folder.iterdir() if obj.is_file()]
+        Returns the ID of the most recent migration revision.
 
+        :return: Zero-padded numeric string representing the last revision ID.
+        """
+        file_names: List[str] = [obj.name for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
         file_names_prefix = [file_name.split("_")[0] for file_name in file_names]
-        if len(file_names_prefix) == 0:
-            return FIRST_REVISION_ID
-
-
+        if not file_names_prefix:
+            return MigrationConstants.FIRST_REVISION_ID
         file_names_prefix.sort()
         return file_names_prefix[-1]
 
-    @staticmethod
-    def __get_last_revision_name(is_downgrade: bool = False) -> str:
+    def __get_last_revision_name(self, is_downgrade: bool = False) -> str:
         """
-        Get the last revision name
-        :param is_downgrade: bool
-        :return: str
+        Returns the filename of the most recent (or oldest if downgrade) revision.
+
+        :param is_downgrade: If True, fetches the first revision instead of the last.
+        :return: Filename of the revision.
         """
-        folder = Path("./versions")
-        file_names: List[str] = [obj.name for obj in folder.iterdir() if obj.is_file()]
+        file_names: List[str] = [obj.name for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
         file_names.sort()
         return file_names[-1] if not is_downgrade else file_names[0]
 
     def generate_revision(self, revision_name: str = "") -> None:
         """
-        Generate a new revision
-        :param revision_name: str
-        :return: None
+        Generates a new migration revision file.
+
+        :param revision_name: Name for the migration; if empty, a UUID is used.
         """
         for char in revision_name:
             if not char.isalnum() and char != " " and char != "_":
@@ -109,28 +124,33 @@ class MigrationEngine:
 
         self.__create_revision_file(revision_name)
 
-    @staticmethod
-    def list_revisions() -> List[Path]:
-        folder = Path("./versions")
-        files: List[Path] = [obj for obj in folder.iterdir() if obj.is_file()]
-        files_sorted: List[Path] = sorted(files, key=lambda x: x.name.split("_")[0])
-        return files_sorted
+    def list_revisions(self) -> List[Path]:
+        """
+        Lists all available migration revision files, sorted by revision ID.
+
+        :return: Sorted list of Path objects.
+        """
+        files: List[Path] = [obj for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
+        return sorted(files, key=lambda x: x.name.split("_")[0])
 
     def upgrade(self) -> None:
+        """
+        Applies all up migration scripts in order.
+        Each script is parsed to extract SQL statements from the "-- Up" section.
+        """
         revisions = self.list_revisions()
         for revision in revisions:
             lines = revision.read_text().splitlines()
             builder = StringIO()
             for line in lines:
-                if line.startswith(UP_PREFIX):
-                    pass
-                if line.startswith(DOWN_PREFIX):
+                if line.startswith(MigrationConstants.UP_PREFIX):
+                    continue
+                if line.startswith(MigrationConstants.DOWN_PREFIX):
                     break
+                if not line.startswith(MigrationConstants.COMMENT_PREFIX):
+                    builder.writelines([line, "\n"])
 
-                if not line.startswith(COMMENT_PREFIX):
-                    builder.write(line)
-                    builder.write("\n")
-
+            print(builder.getvalue())
             self.db.execute(builder.getvalue())
             self.db.commit()
 
@@ -138,22 +158,24 @@ class MigrationEngine:
         self.upsert_migration_table(last_revision_name)
 
     def downgrade(self) -> None:
-        revisions = self.__get_all_revisions()
+        """
+        Applies all down migration scripts in reverse order.
+        Each script is parsed to extract SQL statements from the "-- Down" section.
+        """
+        revisions = self.list_revisions()
         revisions.reverse()
         for revision in revisions:
             lines = revision.read_text().splitlines()
             builder = StringIO()
             is_down = False
             for line in lines:
-                if line.startswith(DOWN_PREFIX):
+                if line.startswith(MigrationConstants.DOWN_PREFIX):
                     is_down = True
                     continue
-
-                if not line.startswith(COMMENT_PREFIX) and is_down:
+                if not line.startswith(MigrationConstants.COMMENT_PREFIX) and is_down:
                     builder.write(line)
                     builder.write("\n")
 
-            is_down = False
             self.db.execute(builder.getvalue())
             self.db.commit()
 
@@ -161,7 +183,12 @@ class MigrationEngine:
         self.upsert_migration_table(last_revision_name)
 
     def upsert_migration_table(self, revision_name: str) -> None:
-        if not self.at_least_one_revision_executed():
+        """
+        Inserts or updates the 'migrations' table with the latest applied revision.
+
+        :param revision_name: The name of the last executed revision file.
+        """
+        if not self.__at_least_one_revision_executed():
             self.db.execute(f"""
                 INSERT INTO migrations (name) VALUES ('{revision_name}')
             """)
@@ -169,10 +196,14 @@ class MigrationEngine:
             self.db.execute(f"""
                 UPDATE migrations SET name = '{revision_name}'
             """)
-
         self.db.commit()
 
-    def at_least_one_revision_executed(self) -> bool:
+    def __at_least_one_revision_executed(self) -> bool:
+        """
+        Checks if at least one migration has already been executed.
+
+        :return: True if the migrations table contains any rows.
+        """
         logger.debug('checking if at least one revision has been executed')
         result = self.db.execute("SELECT COUNT(*) FROM migrations")
         return result.fetchone()[0] > 0
