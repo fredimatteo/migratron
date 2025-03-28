@@ -4,7 +4,7 @@ from io import StringIO
 from pathlib import Path
 from typing import List, Optional, Final
 
-from migropy.configuration_parser import load_config
+from migropy.core.config import default_config, Config
 from migropy.core.logger import logger
 from migropy.databases.db_connector import DatabaseConnector
 
@@ -32,7 +32,7 @@ class MigrationEngine:
     executed migrations.
     """
 
-    def __init__(self, db: Optional[DatabaseConnector] = None, migration_dir: Optional[str] = None):
+    def __init__(self, db: Optional[DatabaseConnector] = None, config: Optional['Config'] = default_config):
         """
         Initialize the migration engine with an optional database connector and migration directory.
 
@@ -40,10 +40,8 @@ class MigrationEngine:
         :param migration_dir: Optional path to the directory containing migration scripts.
         """
         self.db: Optional[DatabaseConnector] = db
-        if migration_dir:
-            self.migration_dir: Path = Path(migration_dir).resolve()
-        else:
-            self.migration_dir: Path = Path(load_config().get('script_location')).resolve()
+        self.migration_dir: Path = Path(config.script_location).resolve()
+
 
     def init(self):
         """
