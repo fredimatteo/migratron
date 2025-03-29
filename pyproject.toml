@@ -18,6 +18,11 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database"
 ]
+
+[project.urls]
+Homepage = "https://github.com/fredimatteo/migropy/blob/develop/README.md"
+Repository = "https://github.com/fredimatteo/migropy.git"
+
 dependencies = [
     "psycopg (>=3.2.6,<4.0.0)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
