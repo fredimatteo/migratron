@@ -19,10 +19,6 @@ classifiers = [
     "Topic :: Database"
 ]
 
-[project.urls]
-Homepage = "https://github.com/fredimatteo/migropy/blob/develop/README.md"
-Repository = "https://github.com/fredimatteo/migropy.git"
-
 dependencies = [
     "psycopg (>=3.2.6,<4.0.0)",
     "mysql-connector-python (>=9.2.0,<10.0.0)",
@@ -96,3 +92,7 @@ filename = "pyproject.toml"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[project.urls]
+homepage = "https://github.com/fredimatteo/migropy/blob/develop/README.md"
+repository = "https://github.com/fredimatteo/migropy.git"
