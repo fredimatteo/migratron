@@ -14,6 +14,7 @@ class CommandsEnum(enum.StrEnum):
     UPGRADE = "upgrade"
     DOWNGRADE = "downgrade"
     LIST_REVISIONS = "list"
+    ROLLBACK = "rollback"
 
 
 class Commands:
@@ -99,3 +100,7 @@ class Commands:
         revisions = MigrationEngine().list_revisions()
         for revision in revisions:
             print('- ' + revision.name)
+
+    @staticmethod
+    def __rollback():
+        pass
