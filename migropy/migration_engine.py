@@ -6,7 +6,7 @@ from typing import List, Optional, Final
 
 from migropy.core.config import default_config, Config
 from migropy.core.logger import logger
-from migropy.databases.db_connector import DatabaseConnector
+from migropy.databases.base_adapter import BaseAdapter
 
 
 class MigrationConstants:
@@ -32,14 +32,14 @@ class MigrationEngine:
     executed migrations.
     """
 
-    def __init__(self, db: Optional[DatabaseConnector] = None, config: Optional['Config'] = default_config):
+    def __init__(self, db: Optional[BaseAdapter] = None, config: Optional['Config'] = default_config):
         """
         Initialize the migration engine with an optional database connector and migration directory.
 
         :param db: Optional DatabaseConnector instance for SQL execution.
         :param config: Optional configuration object. If not provided, a default configuration is used.
         """
-        self.db: Optional[DatabaseConnector] = db
+        self.db: Optional[BaseAdapter] = db
         self.migration_dir: Path = Path(config.script_location).resolve()
 
 
