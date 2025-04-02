@@ -61,7 +61,7 @@ migropy init
 ```
 
 ### 2. Fill the config.ini file
-
+This file is generated in your current directory and contains the database connection parameters and the path to the migration
 ```ini
 [database]
 # database connection parameters
