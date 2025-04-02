@@ -49,62 +49,6 @@ class MigrationEngine:
         """
         self.__create_migration_table()
 
-    def __create_migration_table(self) -> None:
-        """
-        Creates the 'migrations' table if it does not exist.
-        This table tracks the latest executed revision.
-        """
-        if self.db:
-            logger.debug('creating migrations table')
-            self.db.execute("""
-                CREATE TABLE IF NOT EXISTS migrations (
-                    id SERIAL PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            """)
-            self.db.commit()
-
-    def __create_revision_file(self, revision_name: str) -> None:
-        """
-        Creates a new revision SQL file with up and down sections.
-
-        :param revision_name: Name of the revision.
-        """
-        revision_id = self.__get_last_revision_id()
-        revision_id = str(int(revision_id) + 1).zfill(4)
-
-        revision_file_name = f"{revision_id}_{revision_name}.sql"
-        revision_file_path = self.migration_dir / 'versions' / revision_file_name
-
-        self.migration_dir.mkdir(parents=True, exist_ok=True)
-        with open(revision_file_path, "w", encoding='utf-8') as revision_file:
-            revision_file.writelines(MigrationConstants.REVISION_TEMPLATE)
-
-    def __get_last_revision_id(self) -> str:
-        """
-        Returns the ID of the most recent migration revision.
-
-        :return: Zero-padded numeric string representing the last revision ID.
-        """
-        file_names: List[str] = [obj.name for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
-        file_names_prefix = [file_name.split("_")[0] for file_name in file_names]
-        if not file_names_prefix:
-            return MigrationConstants.FIRST_REVISION_ID
-        file_names_prefix.sort()
-        return file_names_prefix[-1]
-
-    def __get_last_revision_name(self, is_downgrade: bool = False) -> str:
-        """
-        Returns the filename of the most recent (or oldest if downgrade) revision.
-
-        :param is_downgrade: If True, fetches the first revision instead of the last.
-        :return: Filename of the revision.
-        """
-        file_names: List[str] = [obj.name for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
-        file_names.sort()
-        return file_names[-1] if not is_downgrade else file_names[0]
-
     def generate_revision(self, revision_name: str = "") -> None:
         """
         Generates a new migration revision file.
@@ -195,6 +139,63 @@ class MigrationEngine:
                 UPDATE migrations SET name = '{revision_name}'
             """)
         self.db.commit()
+
+    def __create_migration_table(self) -> None:
+        """
+        Creates the 'migrations' table if it does not exist.
+        This table tracks the latest executed revision.
+        """
+        if self.db:
+            logger.debug('creating migrations table')
+            self.db.execute("""
+                CREATE TABLE IF NOT EXISTS migrations (
+                    id SERIAL PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            self.db.commit()
+
+    def __create_revision_file(self, revision_name: str) -> None:
+        """
+        Creates a new revision SQL file with up and down sections.
+
+        :param revision_name: Name of the revision.
+        """
+        revision_id = self.__get_last_revision_id()
+        revision_id = str(int(revision_id) + 1).zfill(4)
+
+        revision_file_name = f"{revision_id}_{revision_name}.sql"
+        revision_file_path = self.migration_dir / 'versions' / revision_file_name
+
+        self.migration_dir.mkdir(parents=True, exist_ok=True)
+        with open(revision_file_path, "w", encoding='utf-8') as revision_file:
+            revision_file.writelines(MigrationConstants.REVISION_TEMPLATE)
+
+    def __get_last_revision_id(self) -> str:
+        """
+        Returns the ID of the most recent migration revision.
+
+        :return: Zero-padded numeric string representing the last revision ID.
+        """
+        file_names: List[str] = [obj.name for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
+        file_names_prefix = [file_name.split("_")[0] for file_name in file_names]
+        if not file_names_prefix:
+            return MigrationConstants.FIRST_REVISION_ID
+        file_names_prefix.sort()
+        return file_names_prefix[-1]
+
+    def __get_last_revision_name(self, is_downgrade: bool = False) -> str:
+        """
+        Returns the filename of the most recent (or oldest if downgrade) revision.
+
+        :param is_downgrade: If True, fetches the first revision instead of the last.
+        :return: Filename of the revision.
+        """
+        file_names: List[str] = [obj.name for obj in self.migration_dir.joinpath('versions').iterdir() if obj.is_file()]
+        file_names.sort()
+        return file_names[-1] if not is_downgrade else file_names[0]
+
 
     def __at_least_one_revision_executed(self) -> bool:
         """
