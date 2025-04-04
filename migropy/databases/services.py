@@ -1,11 +1,11 @@
 from migropy.core.config import Config
+from migropy.databases.base_adapter import BaseAdapter
 from migropy.databases.commons import DbConfig
-from migropy.databases.db_connector import DatabaseConnector
 from migropy.databases.my_sql import MySql
 from migropy.databases.postgres import Postgres
 
 
-def get_db_connector(config: Config) -> DatabaseConnector:
+def get_db_connector(config: Config) -> BaseAdapter:
     db_type = config.db_type
 
     cf = DbConfig(

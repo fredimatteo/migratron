@@ -12,7 +12,7 @@ DbConnection: TypeAlias = Union[
 ]
 
 
-class DatabaseConnector(ABC):
+class BaseAdapter(ABC):
     @abstractmethod
     def connection(self) -> DbConnection:
         pass

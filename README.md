@@ -60,14 +60,8 @@ parameters.
 migropy init
 ```
 
-### 2. Go to the migrations directory
-
-```bash
-cd migropy
-```
-
-### 3. Fill the config.ini file
-
+### 2. Fill the config.ini file
+This file is generated in your current directory and contains the database connection parameters and the path to the migration
 ```ini
 [database]
 # database connection parameters
@@ -89,7 +83,7 @@ script_location = migropy
 level = DEBUG
 ```
 
-### 4. Create a new migration
+### 3. Create a new migration
 
 This command will create a new migration file in the `migropy/versions` directory with the following template:
 
@@ -103,7 +97,7 @@ migropy generate 'migration name'
 -- Down migration
 ```
 
-### 5. Apply the migrations
+### 4. Apply the migrations
 
 This command will apply all the migrations in the `migrations` directory. Please note the migrations are applied in
 the prefix order.

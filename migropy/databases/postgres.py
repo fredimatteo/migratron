@@ -3,11 +3,11 @@ import sys
 import psycopg
 
 from migropy.core.logger import logger
+from migropy.databases.base_adapter import BaseAdapter
 from migropy.databases.commons import DbConfig
-from migropy.databases.db_connector import DatabaseConnector
 
 
-class Postgres(DatabaseConnector):
+class Postgres(BaseAdapter):
     def __init__(self, config: DbConfig):
         self.host = config.host
         self.user = config.user
