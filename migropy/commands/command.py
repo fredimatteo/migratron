@@ -14,6 +14,7 @@ class CommandsEnum(enum.StrEnum):
     UPGRADE = "upgrade"
     DOWNGRADE = "downgrade"
     LIST_REVISIONS = "list"
+    ROLLBACK = "rollback"
 
 
 class Commands:
@@ -42,6 +43,8 @@ class Commands:
                 self.__downgrade()
             case CommandsEnum.LIST_REVISIONS:
                 self.__list()
+            case CommandsEnum.ROLLBACK:
+                self.__rollback(**kwargs)
             case _:
                 logger.error("Unknown command: %s", self.command)
 
@@ -99,3 +102,10 @@ class Commands:
         revisions = MigrationEngine().list_revisions()
         for revision in revisions:
             print('- ' + revision.name)
+
+    @staticmethod
+    def __rollback(migrations_to_rollback: int):
+        db = get_db_connector(load_config())
+
+        migration_engine = MigrationEngine(db)
+        migration_engine.rollback(migrations_to_rollback)

@@ -27,6 +27,10 @@ def main():
     # Version command
     parser.add_argument("--version", "-v", action="version", version=current_version)
 
+    # Rollback command
+    rollback_parser = subparsers.add_parser("rollback", help="rollback the last migration")
+    rollback_parser.add_argument("migrations_to_rollback", type=int, help="number of migrations to rollback")
+
     args = parser.parse_args()
 
     migration_name = None
@@ -35,8 +39,14 @@ def main():
     except AttributeError:
         pass
 
+    migrations_to_rollback = None
+    try:
+        migrations_to_rollback = args.migrations_to_rollback
+    except AttributeError:
+        pass
+
     cmd = Commands(args.command)
-    cmd.dispatch(migration_name=migration_name)
+    cmd.dispatch(migration_name=migration_name, migrations_to_rollback=migrations_to_rollback)
 
 
 if __name__ == "__main__":
