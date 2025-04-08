@@ -124,6 +124,39 @@ class MigrationEngine:
         last_revision_name = self.__get_last_revision_name(is_downgrade=True)
         self.upsert_migration_table(last_revision_name)
 
+    def rollback(self, migrations_to_rollback: int = 0) -> None:
+        """
+        Rolls back the last applied migration by executing the corresponding down script.
+        """
+        if not self.__at_least_one_revision_executed():
+            logger.error('no migrations have been executed yet')
+            sys.exit(1)
+
+        revisions = self.list_revisions()
+        revisions.reverse()
+        if migrations_to_rollback > len(revisions):
+            logger.error('cannot rollback more migrations than available')
+            sys.exit(1)
+
+        revisions = revisions[:migrations_to_rollback]
+        for revision in revisions:
+            lines = revision.read_text().splitlines()
+            builder = StringIO()
+            is_down = False
+            for line in lines:
+                if line.startswith(MigrationConstants.DOWN_PREFIX):
+                    is_down = True
+                    continue
+                if not line.startswith(MigrationConstants.COMMENT_PREFIX) and is_down:
+                    builder.write(line)
+                    builder.write("\n")
+
+            self.db.execute(builder.getvalue())
+            self.db.commit()
+
+        last_revision_name = self.__get_last_revision_name(is_downgrade=True)
+        self.upsert_migration_table(last_revision_name)
+
     def upsert_migration_table(self, revision_name: str) -> None:
         """
         Inserts or updates the 'migrations' table with the latest applied revision.
