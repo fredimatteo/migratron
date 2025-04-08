@@ -43,6 +43,8 @@ class Commands:
                 self.__downgrade()
             case CommandsEnum.LIST_REVISIONS:
                 self.__list()
+            case CommandsEnum.ROLLBACK:
+                self.__rollback(**kwargs)
             case _:
                 logger.error("Unknown command: %s", self.command)
 
@@ -102,5 +104,8 @@ class Commands:
             print('- ' + revision.name)
 
     @staticmethod
-    def __rollback():
-        pass
+    def __rollback(migrations_to_rollback: int):
+        db = get_db_connector(load_config())
+
+        migration_engine = MigrationEngine(db)
+        migration_engine.rollback(migrations_to_rollback)
