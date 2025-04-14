@@ -16,10 +16,11 @@ environments.
 - [📦 Installation](#-installation)
 - [📖 How to use - CLI](#-how-to-use---cli)
   - [1. Initialize a new migration project](#1-initialize-a-new-migration-project)
-  - [2. Go to the migrations directory](#2-go-to-the-migrations-directory)
-  - [3. Fill the config.ini file](#3-fill-the-configini-file)
-  - [4. Create a new migration](#4-create-a-new-migration)
-  - [5. Apply the migrations](#5-apply-the-migrations)
+  - [2. Fill the config.ini file](#2-fill-the-configini-file)
+  - [3. Create a new migration](#3-create-a-new-migration)
+  - [4. Apply the migrations](#4-apply-the-migrations)
+  - [5. Downgrade the migrations](#5-downgrade-the-migrations)
+  - [6. Rollback the migrations](#6-rollback-the-migrations)
 - [🐍 How to use - Python](#-how-to-use---python)
 - [📄 Migration example](#-migration-example)
 - [⚙️ Available commands](#-available-commands)
@@ -105,6 +106,22 @@ the prefix order.
 migropy upgrade
 ```
 
+### 5. Downgrade the migrations
+
+This command will downgrade all the migrations in the `migrations` directory. Please note the migrations are 
+downgraded in
+the prefix order.
+```bash
+migropy downgrade
+```
+
+### 6. Rollback the migrations
+
+This command will rollback the last n migrations in the `migrations` directory, starting from the last one executed.
+```bash
+migropy rollback <n>
+```
+
 ---
 
 ## 🐍 How to use - Python
@@ -174,13 +191,14 @@ DROP TABLE users;
 
 ## ⚙️ Available commands
 
-| Comando                   | Descrizione                   |
-|---------------------------|-------------------------------|
-| `migropy init`            | Init migratron environment    |
-| `migropy generate <name>` | Generate a new sql migration  |
-| `migropy upgrade`         | Apply all the migration       |
-| `migropy downgrade`       | Rollback all revisions        |
-| `migropy list `           | Show current migration status |
+| Comando                       | Descrizione                   |
+|-------------------------------|-------------------------------|
+| `migropy init`                | Init migratron environment    |
+| `migropy generate <name:str>` | Generate a new sql migration  |
+| `migropy upgrade`             | Apply all the migration       |
+| `migropy downgrade`           | Rollback all revisions        |
+| `migropy rollback <n:int>`    | Rollback n revisions          |
+| `migropy list `               | Show current migration status |
 
 ---
 
@@ -200,6 +218,7 @@ See the full [CHANGELOG.md](https://github.com/fredimatteo/migratron/blob/main/C
 
 ### Latest Changes
 
+- **0.3.0** - Add rollback command
 - **0.2.2** – Commands refactor & usage from python code
 - **0.2.1** – Increase minimum python version to 3.10 & refactor MigrationEngine
 - **0.2.0** – MySQL database support
