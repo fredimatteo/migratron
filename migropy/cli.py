@@ -13,7 +13,7 @@ def main():
 
     # Generate command
     generate_parser = subparsers.add_parser("generate", help="generate a new migration")
-    generate_parser.add_argument("name", type=str, help="migration name")
+    generate_parser.add_argument("migration_name", type=str, help="migration name")
 
     # Upgrade command
     subparsers.add_parser("upgrade", help="execute all pending migrations")
@@ -33,20 +33,8 @@ def main():
 
     args = parser.parse_args()
 
-    migration_name = None
-    try:
-        migration_name = args.name
-    except AttributeError:
-        pass
-
-    migrations_to_rollback = None
-    try:
-        migrations_to_rollback = args.migrations_to_rollback
-    except AttributeError:
-        pass
-
     cmd = Commands(args.command)
-    cmd.dispatch(migration_name=migration_name, migrations_to_rollback=migrations_to_rollback)
+    cmd.dispatch(**vars(args))
 
 
 if __name__ == "__main__":

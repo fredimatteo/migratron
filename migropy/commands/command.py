@@ -36,7 +36,12 @@ class Commands:
             case CommandsEnum.INIT:
                 self.__init()
             case CommandsEnum.GENERATE:
-                self.__generate(**kwargs)
+                if "migration_name" not in kwargs:
+                    logger.error("Migration name is required for generate command.")
+                    sys.exit(1)
+
+                migration_name = kwargs["migration_name"]
+                self.__generate(migration_name)
             case CommandsEnum.UPGRADE:
                 self.__upgrade()
             case CommandsEnum.DOWNGRADE:
@@ -44,7 +49,12 @@ class Commands:
             case CommandsEnum.LIST_REVISIONS:
                 self.__list()
             case CommandsEnum.ROLLBACK:
-                self.__rollback(**kwargs)
+                if "migrations_to_rollback" not in kwargs:
+                    logger.error("Number of migrations to rollback is required.")
+                    sys.exit(1)
+
+                migrations_to_rollback = kwargs["migrations_to_rollback"]
+                self.__rollback(migrations_to_rollback)
             case _:
                 logger.error("Unknown command: %s", self.command)
 
