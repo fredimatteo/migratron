@@ -124,22 +124,36 @@ class MigrationEngine:
         last_revision_name = self.__get_last_revision_name(is_downgrade=True)
         self.upsert_migration_table(last_revision_name)
 
-    def rollback(self, migrations_to_rollback: int = 0) -> None:
+    def rollback(self, migrations_to_rollback: int = 1) -> None:
         """
-        Rolls back the last applied migration by executing the corresponding down script.
+        Rolls back the last 'n' applied migrations by executing the corresponding down scripts.
+
+        :param migrations_to_rollback: Number of migrations to rollback, starting from the last applied.
         """
         if not self.__at_least_one_revision_executed():
-            logger.error('no migrations have been executed yet')
+            print('Error: No migrations have been executed yet.')
             sys.exit(1)
 
-        revisions = self.list_revisions()
-        revisions.reverse()
-        if migrations_to_rollback > len(revisions):
-            logger.error('cannot rollback more migrations than available')
+        executed_revision_name = self.__get_last_revision_executed_name()
+        if not executed_revision_name:
+            print('Error: Unable to retrieve the last executed migration.')
             sys.exit(1)
 
-        revisions = revisions[:migrations_to_rollback]
-        for revision in revisions:
+        all_revisions = self.list_revisions()
+        executed_index = next((i for i, rev in enumerate(all_revisions) if executed_revision_name in rev.name), None)
+
+        if executed_index is None:
+            print('Error: Executed revision not found in revision files.')
+            sys.exit(1)
+
+        applicable_revisions = all_revisions[:executed_index + 1][-migrations_to_rollback:]
+        applicable_revisions.reverse()
+
+        if migrations_to_rollback > len(applicable_revisions):
+            print(f'Error: Cannot rollback {migrations_to_rollback} migrations. Only {len(applicable_revisions)} available.')
+            sys.exit(1)
+
+        for revision in applicable_revisions:
             lines = revision.read_text().splitlines()
             builder = StringIO()
             is_down = False
@@ -148,14 +162,20 @@ class MigrationEngine:
                     is_down = True
                     continue
                 if not line.startswith(MigrationConstants.COMMENT_PREFIX) and is_down:
-                    builder.write(line)
-                    builder.write("\n")
+                    builder.write(line + "\n")
 
             self.db.execute(builder.getvalue())
             self.db.commit()
 
-        last_revision_name = self.__get_last_revision_name(is_downgrade=True)
-        self.upsert_migration_table(last_revision_name)
+        new_last_index = executed_index - migrations_to_rollback
+
+        if new_last_index < 0:
+            self.db.execute("DELETE FROM migrations")
+        else:
+            new_revision_name = all_revisions[new_last_index].name
+            self.upsert_migration_table(new_revision_name)
+
+        self.db.commit()
 
     def upsert_migration_table(self, revision_name: str) -> None:
         """
@@ -239,3 +259,15 @@ class MigrationEngine:
         logger.debug('checking if at least one revision has been executed')
         result = self.db.execute("SELECT COUNT(*) FROM migrations")
         return result.fetchone()[0] > 0
+
+    def __get_last_revision_executed_name(self) -> str:
+        """
+        Retrieves the last executed revision from the migrations table.
+
+        :return: The name of the last executed revision.
+        """
+        result = self.db.execute("SELECT name FROM migrations")
+        result = result.fetchone()
+        if len(result) > 0:
+            return result[0]
+        return None
